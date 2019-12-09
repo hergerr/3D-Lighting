@@ -7,7 +7,6 @@ typedef float point3[3];
 
 using namespace std;
 
-int model = 1;
 
 int getRand(int a, int b)
 {
@@ -138,8 +137,7 @@ void printTriangles()
 
 void Egg()
 {
-    if (model == 1)
-        printTriangles();
+    printTriangles();
 }
 
 // ----------------KONIEC WKLEJKI-------------------------
@@ -295,12 +293,17 @@ void MyInit(void)
     GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
     GLfloat mat_shininess = {20.0};
     GLfloat light_position[] = {0.0, 0.0, 10.0, 1.0};
-    GLfloat light_ambient[] = {0.1, 0.1, 0.1, 1.0};
-    GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light_ambient[] = {0.1, 0.0, 0.0, 1.0};
+    GLfloat light_diffuse[] = {1.0, 0.0, 0.0, 1.0};
+    GLfloat light_specular[] = {1.0, 0.0, 0.0, 1.0};
     GLfloat att_constant = {1.0};
     GLfloat att_linear = {0.05};
     GLfloat att_quadratic = {0.001};
+
+    GLfloat light1_position[] = {0.0, 0.0, -10.0, 1.0}; 
+    GLfloat light1_ambient[] = {0.1, 0.0, 0.1, 1.0};
+    GLfloat light1_diffuse[] = {0.0, 0.0, 1.0, 1.0};
+    GLfloat light1_specular[] = {0.0, 0.0, 1.0, 1.0};
 
     // Ustawienie patrametrów materiału
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -317,12 +320,21 @@ void MyInit(void)
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic);
 
+    // Ustawienie parametrów źródła
+    glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
+    glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, att_constant);
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, att_linear);
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, att_quadratic);
+
     // Ustawienie opcji systemu oświetlania sceny
     glShadeModel(GL_SMOOTH); // właczenie łagodnego cieniowania
     glEnable(GL_LIGHTING);   // właczenie systemu oświetlenia sceny
     glEnable(GL_LIGHT0);     // włączenie źródła o numerze 0
+    glEnable(GL_LIGHT1);     // włączenie źródła o numerze 0
     glEnable(GL_DEPTH_TEST); // włączenie mechanizmu z-bufora
-
 }
 
 void ChangeSize(GLsizei horizontal, GLsizei vertical)
