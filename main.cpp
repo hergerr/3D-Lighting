@@ -40,12 +40,12 @@ GLfloat att_constant = {1.0};
 GLfloat att_linear = {0.05};
 GLfloat att_quadratic = {0.001};
 
-GLfloat light_position[] = {0, 0, 10.0, 1.0};
+GLfloat light_position[] = {0, 0, 5.0, 1.0};
 GLfloat light_ambient[] = {0.1, 0.0, 0.0, 1.0};
 GLfloat light_diffuse[] = {1.0, 0.0, 0.0, 1.0};
 GLfloat light_specular[] = {1.0, 0.0, 0.0, 1.0};
 
-GLfloat light1_position[] = {0.0, 0.0, -10.0, 1.0}; 
+GLfloat light1_position[] = {0.0, 0.0, -5.0, 1.0}; 
 GLfloat light1_ambient[] = {0.1, 0.0, 0.1, 1.0};
 GLfloat light1_diffuse[] = {0.0, 0.0, 1.0, 1.0};
 GLfloat light1_specular[] = {0.0, 0.0, 1.0, 1.0};
@@ -277,12 +277,19 @@ void RenderScene(void)
 
     // Egg();
     glutSolidTeapot(3.0);
-
     GLfloat light_position[] = {r * cos(2 * M_PI * side_light) * cos(2 * M_PI * up_light), r * sin(2 * M_PI * up_light), r * sin(2 * M_PI * side_light) * cos(2 * M_PI * up_light), 1.0};
-
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 
+    glPushMatrix();
+    glTranslatef(light_position[0], light_position[1], light_position[2]);
+    glutSolidTeapot(1.0);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(light1_position[0], light1_position[1], light1_position[2]);
+    glutSolidTeapot(1.0);
+    glPopMatrix();
 
     glFlush();
     glutSwapBuffers();
