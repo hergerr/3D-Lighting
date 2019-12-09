@@ -1,7 +1,148 @@
 #include <GL/glut.h>
 #include <math.h>
+#include <vector>
+#include <iostream>
 
 typedef float point3[3];
+
+using namespace std;
+
+int model = 1;
+
+int getRand(int a, int b)
+{
+    return a + rand() % (b - a);
+}
+
+struct Point
+{
+    float x, y, z;
+    int a, b, c;
+};
+
+const int N = 21;
+vector<vector<Point>> points;
+
+void resizeVectors()
+{
+    points.resize(N);
+    for (int i = 0; i < N; i++)
+    {
+        points[i].resize(N);
+    }
+}
+
+float calcX(float u, float v)
+{
+    return (-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * pow(u, 2) - 45 * u) * cos(M_PI * v);
+}
+
+float calcY(float u, float v)
+{
+    return 160 * pow(u, 4) - 320 * pow(u, 3) + 160 * pow(u, 2) - 5;
+}
+
+float calcZ(float u, float v)
+{
+    return (-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * pow(u, 2) - 45 * u) * sin(M_PI * v);
+}
+
+void calculatePoints()
+{
+
+    float u, v;
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            u = float(i) / (N - 1);
+            v = float(j) / (N - 1);
+
+            points[i][j].x = calcX(u, v);
+            points[i][j].y = calcY(u, v);
+            points[i][j].z = calcZ(u, v);
+
+            points[i][j].a = getRand(0, 255);
+            points[i][j].b = getRand(0, 255);
+            points[i][j].c = getRand(0, 255);
+        }
+    }
+}
+
+void printTriangles()
+{
+    for (int i = 0; i < N - 1; i++)
+    {
+        for (int j = 0; j < N - 1; j++)
+        {
+            if (points[i][j].z > 0)
+            {
+                glBegin(GL_TRIANGLES);
+
+                glColor3ub(points[i][j].a, points[i][j].b, points[i][j].c);
+                glVertex3f(points[i][j].x, points[i][j].y, points[i][j].z);
+
+                glColor3ub(points[i][j + 1].a, points[i][j + 1].b, points[i][j + 1].c);
+                glVertex3f(points[i][j + 1].x, points[i][j + 1].y, points[i][j + 1].z);
+
+                glColor3ub(points[i + 1][j].a, points[i + 1][j].b, points[i + 1][j].c);
+                glVertex3f(points[i + 1][j].x, points[i + 1][j].y, points[i + 1][j].z);
+
+                glEnd();
+
+                glBegin(GL_TRIANGLES);
+
+                glColor3ub(points[i + 1][j].a, points[i + 1][j].b, points[i + 1][j].c);
+                glVertex3f(points[i + 1][j].x, points[i + 1][j].y, points[i + 1][j].z);
+
+                glColor3ub(points[i + 1][j + 1].a, points[i + 1][j + 1].b, points[i + 1][j + 1].c);
+                glVertex3f(points[i + 1][j + 1].x, points[i + 1][j + 1].y, points[i + 1][j + 1].z);
+
+                glColor3ub(points[i][j + 1].a, points[i][j + 1].b, points[i][j + 1].c);
+                glVertex3f(points[i][j + 1].x, points[i][j + 1].y, points[i][j + 1].z);
+
+                glEnd();
+            }
+            else
+            {
+                glBegin(GL_TRIANGLES);
+
+                glColor3ub(points[i][j].a, points[i][j].b, points[i][j].c);
+                glVertex3f(points[i][j].x, points[i][j].y, points[i][j].z);
+
+                glColor3ub(points[i][j + 1].a, points[i][j + 1].b, points[i][j + 1].c);
+                glVertex3f(points[i][j + 1].x, points[i][j + 1].y, points[i][j + 1].z);
+
+                glColor3ub(points[i + 1][j].a, points[i + 1][j].b, points[i + 1][j].c);
+                glVertex3f(points[i + 1][j].x, points[i + 1][j].y, points[i + 1][j].z);
+
+                glEnd();
+
+                glBegin(GL_TRIANGLES);
+
+                glColor3ub(points[i + 1][j].a, points[i + 1][j].b, points[i + 1][j].c);
+                glVertex3f(points[i + 1][j].x, points[i + 1][j].y, points[i + 1][j].z);
+
+                glColor3ub(points[i + 1][j + 1].a, points[i + 1][j + 1].b, points[i + 1][j + 1].c);
+                glVertex3f(points[i + 1][j + 1].x, points[i + 1][j + 1].y, points[i + 1][j + 1].z);
+
+                glColor3ub(points[i][j + 1].a, points[i][j + 1].b, points[i][j + 1].c);
+                glVertex3f(points[i][j + 1].x, points[i][j + 1].y, points[i][j + 1].z);
+
+                glEnd();
+            }
+        }
+    }
+}
+
+void Egg()
+{
+    if (model == 1)
+        printTriangles();
+}
+
+// ----------------KONIEC WKLEJKI-------------------------
 
 static GLfloat viewer[] = {3.0, 3.0, 10.0};
 
@@ -116,7 +257,8 @@ void RenderScene(void)
 
     glColor3f(1.0f, 1.0f, 1.0f);
 
-    glutWireTeapot(3.0);
+    Egg();
+    // glutSolidTeapot(3.0);
     glFlush();
     glutSwapBuffers();
 }
@@ -145,8 +287,42 @@ void keys(unsigned char key, int x, int y)
 
 void MyInit(void)
 {
+    resizeVectors();
+    calculatePoints();
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    GLfloat mat_ambient[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat mat_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat mat_shininess = {20.0};
+    GLfloat light_position[] = {0.0, 0.0, 10.0, 1.0};
+    GLfloat light_ambient[] = {0.1, 0.1, 0.1, 1.0};
+    GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat att_constant = {1.0};
+    GLfloat att_linear = {0.05};
+    GLfloat att_quadratic = {0.001};
+
+    // Ustawienie patrametrów materiału
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+    glMaterialf(GL_FRONT, GL_SHININESS, mat_shininess);
+
+    // Ustawienie parametrów źródła
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, att_constant);
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear);
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic);
+
+    // Ustawienie opcji systemu oświetlania sceny
+    glShadeModel(GL_SMOOTH); // właczenie łagodnego cieniowania
+    glEnable(GL_LIGHTING);   // właczenie systemu oświetlenia sceny
+    glEnable(GL_LIGHT0);     // włączenie źródła o numerze 0
+    glEnable(GL_DEPTH_TEST); // włączenie mechanizmu z-bufora
+
 }
 
 void ChangeSize(GLsizei horizontal, GLsizei vertical)
