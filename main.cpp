@@ -7,6 +7,31 @@ typedef float point3[3];
 
 using namespace std;
 
+static GLfloat viewer[] = {3.0, 3.0, 10.0};
+
+float up = 0.0;
+float side = 0.0;
+float r = 10.0;
+float up_light = 0.0;
+float side_light = 0.0;
+bool mode = true;
+
+static GLfloat theta = 0.0; // kąt obrotu obiektu
+static GLfloat alfa = 0.0;  // kąt obrotu obiektu
+static GLfloat pix2angle;   // przelicznik pikseli na stopnie
+
+static GLint status = 0; // stan klawiszy myszy
+                         // 0 - nie naciśnięto żadnego klawisza
+                         // 1 - naciśnięty zostać lewy klawisz
+
+static int x_pos_old = 0; // poprzednia pozycja kursora myszy
+static int y_pos_old = 0;
+
+static int delta_x = 0; // różnica pomiędzy pozycją bieżącą
+                        // i poprzednią kursora myszy
+
+static int delta_y = 0;
+
 GLfloat mat_ambient[] = {1.0, 1.0, 1.0, 1.0};
 GLfloat mat_diffuse[] = {1.0, 1.0, 1.0, 1.0};
 GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
@@ -15,7 +40,7 @@ GLfloat att_constant = {1.0};
 GLfloat att_linear = {0.05};
 GLfloat att_quadratic = {0.001};
 
-GLfloat light_position[] = {0.0, 0.0, 10.0, 1.0};
+GLfloat light_position[] = {0, 0, 10.0, 1.0};
 GLfloat light_ambient[] = {0.1, 0.0, 0.0, 1.0};
 GLfloat light_diffuse[] = {1.0, 0.0, 0.0, 1.0};
 GLfloat light_specular[] = {1.0, 0.0, 0.0, 1.0};
@@ -159,28 +184,6 @@ void Egg()
 
 // ----------------KONIEC WKLEJKI-------------------------
 
-static GLfloat viewer[] = {3.0, 3.0, 10.0};
-
-float up = 0.0;
-float side = 0.0;
-float r = 10.0;
-bool mode = true;
-
-static GLfloat theta = 0.0; // kąt obrotu obiektu
-static GLfloat alfa = 0.0;  // kąt obrotu obiektu
-static GLfloat pix2angle;   // przelicznik pikseli na stopnie
-
-static GLint status = 0; // stan klawiszy myszy
-                         // 0 - nie naciśnięto żadnego klawisza
-                         // 1 - naciśnięty zostać lewy klawisz
-
-static int x_pos_old = 0; // poprzednia pozycja kursora myszy
-static int y_pos_old = 0;
-
-static int delta_x = 0; // różnica pomiędzy pozycją bieżącą
-                        // i poprzednią kursora myszy
-
-static int delta_y = 0;
 
 void Mouse(int btn, int state, int x, int y)
 {
@@ -275,6 +278,8 @@ void RenderScene(void)
     // Egg();
     glutSolidTeapot(3.0);
 
+    GLfloat light_position[] = {r * cos(2 * M_PI * side_light) * cos(2 * M_PI * up_light), r * sin(2 * M_PI * up_light), r * sin(2 * M_PI * side_light) * cos(2 * M_PI * up_light), 1.0};
+
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 
@@ -301,7 +306,12 @@ void keys(unsigned char key, int x, int y)
             r = 10.0;
         }
     }
-
+    if(key == 'q'){
+        up_light += 0.01;
+    }
+    if(key == 'w'){
+        side_light += 0.01;
+    }
     RenderScene(); // przerysowanie obrazu sceny
 }
 
