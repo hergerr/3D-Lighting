@@ -7,6 +7,23 @@ typedef float point3[3];
 
 using namespace std;
 
+GLfloat mat_ambient[] = {1.0, 1.0, 1.0, 1.0};
+GLfloat mat_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+GLfloat mat_shininess = {20.0};
+GLfloat att_constant = {1.0};
+GLfloat att_linear = {0.05};
+GLfloat att_quadratic = {0.001};
+
+GLfloat light_position[] = {0.0, 0.0, 10.0, 1.0};
+GLfloat light_ambient[] = {0.1, 0.0, 0.0, 1.0};
+GLfloat light_diffuse[] = {1.0, 0.0, 0.0, 1.0};
+GLfloat light_specular[] = {1.0, 0.0, 0.0, 1.0};
+
+GLfloat light1_position[] = {0.0, 0.0, -10.0, 1.0}; 
+GLfloat light1_ambient[] = {0.1, 0.0, 0.1, 1.0};
+GLfloat light1_diffuse[] = {0.0, 0.0, 1.0, 1.0};
+GLfloat light1_specular[] = {0.0, 0.0, 1.0, 1.0};
 
 int getRand(int a, int b)
 {
@@ -255,8 +272,13 @@ void RenderScene(void)
 
     glColor3f(1.0f, 1.0f, 1.0f);
 
-    Egg();
-    // glutSolidTeapot(3.0);
+    // Egg();
+    glutSolidTeapot(3.0);
+
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+
+
     glFlush();
     glutSwapBuffers();
 }
@@ -288,22 +310,6 @@ void MyInit(void)
     resizeVectors();
     calculatePoints();
 
-    GLfloat mat_ambient[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat mat_diffuse[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat mat_shininess = {20.0};
-    GLfloat light_position[] = {0.0, 0.0, 10.0, 1.0};
-    GLfloat light_ambient[] = {0.1, 0.0, 0.0, 1.0};
-    GLfloat light_diffuse[] = {1.0, 0.0, 0.0, 1.0};
-    GLfloat light_specular[] = {1.0, 0.0, 0.0, 1.0};
-    GLfloat att_constant = {1.0};
-    GLfloat att_linear = {0.05};
-    GLfloat att_quadratic = {0.001};
-
-    GLfloat light1_position[] = {0.0, 0.0, -10.0, 1.0}; 
-    GLfloat light1_ambient[] = {0.1, 0.0, 0.1, 1.0};
-    GLfloat light1_diffuse[] = {0.0, 0.0, 1.0, 1.0};
-    GLfloat light1_specular[] = {0.0, 0.0, 1.0, 1.0};
 
     // Ustawienie patrametrów materiału
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -315,7 +321,6 @@ void MyInit(void)
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, att_constant);
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic);
@@ -324,7 +329,6 @@ void MyInit(void)
     glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
     glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
-    glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
     glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, att_constant);
     glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, att_linear);
     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, att_quadratic);
